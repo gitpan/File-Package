@@ -12,7 +12,7 @@ use warnings::register;
 
 use vars qw($VERSION $DATE $FILE);
 $VERSION = '1.1';
-$DATE = '2003/06/24';
+$DATE = '2003/07/03';
 $FILE = __FILE__;
 
 ######
@@ -30,7 +30,7 @@ sub load_package
         my $error =  "# The - in $package causes problems. Perl thinks - is subtraction when it evals it.\n";
         return $error;      
     }
-    return '' if File::FileUtil->is_package_loaded( $package );
+    return '' if File::Package->is_package_loaded( $package );
 
     #####
     # Load the module
@@ -53,7 +53,7 @@ sub load_package
     #####
     # Verify the package vocabulary is present
     #
-    unless (File::FileUtil->is_package_loaded( $package )) {
+    unless (File::Package->is_package_loaded( $package )) {
         return "# $package loaded but package vocabulary absent.\n";
     }
     ''
@@ -67,9 +67,11 @@ sub is_package_loaded
 {
     my (undef, $package) = @_;
    
-    defined %"${package}::"
+    $package .= "::";
+    defined %$package
 
 }
+
 
 
 
@@ -112,14 +114,14 @@ in failure report back to the author of the package.
 
 =head2 is_package_loaded method
 
- $package = File::FileUtil->is_package_loaded($package)
+ $package = File::Package->is_package_loaded($package)
 
 The I<is_package_loaded> method determines if a package
 vocabulary is present.
 
 For example, if I<File::Basename> is not loaded
 
- ==> File::FileUtil->is_package_loaded('File::Basename')
+ ==> File::Package->is_package_loaded('File::Basename')
 
  ''
 =head1 REQUIREMENTS

@@ -29,7 +29,7 @@ else {
 WriteMakefile(
     NAME => 'File::Package',
     DISTNAME => 'File-Package',
-    VERSION  => '0.01',
+    VERSION  => '0.02',
     dist     => {COMPRESS => 'gzip',
                 'gz' => 'gz'},
     test     => {TESTS => $tests},

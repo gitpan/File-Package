@@ -7,12 +7,10 @@ use warnings;
 use warnings::register;
 
 use vars qw($VERSION $DATE);
-$VERSION = '0.07';
-$DATE = '2003/06/24';
+$VERSION = '0.08';
+$DATE = '2003/07/03';
 
-use Cwd;
-use File::Spec;
-use File::FileUtil;
+use File::Package;
 use Test;
 
 ######
@@ -22,7 +20,7 @@ use Test;
 # use a BEGIN block so we print our plan before Module Under Test is loaded
 #
 BEGIN { 
-   use vars qw( $__restore_dir__ @__restore_inc__ $__tests__);
+   use vars qw( $__tests__);
 
    ########
    # Create the test plan by supplying the number of tests
@@ -31,61 +29,15 @@ BEGIN {
    $__tests__ = 2;
    plan(tests => $__tests__);
 
-   ########
-   # Working directory is that of the script file
-   #
-   $__restore_dir__ = cwd();
-   my ($vol, $dirs, undef) = File::Spec->splitpath( __FILE__ );
-   chdir $vol if $vol;
-   chdir $dirs if $dirs;
 
-   #######
-   # Add the current test directory to @INC
-   #   (first t directory in upward march)
-   #
-   # Add the library of the unit under test (UUT) to @INC
-   #   (lib directory at the same level as the t directory)
-   #
-   @__restore_inc__ = @INC;
-
-   my $work_dir = cwd(); # remember the work directory so can restore it
-
-   #######
-   # Add the test directory root t to @INC
-   #
-   ($vol,$dirs) = File::Spec->splitpath( $work_dir, 'nofile');
-   my @dirs = File::Spec->splitdir( $dirs );
-   while( $dirs[-1] ne 't' ) { 
-       chdir File::Spec->updir();
-       pop @dirs;
-   };
-
-
-   ######
-   # Add the unit under test root lib to @INC
-   #
-   unshift @INC, cwd();  # include the current test directory
-   chdir File::Spec->updir();
-   my $lib_dir = File::Spec->catdir( cwd(), 'lib' );
-   unshift @INC, $lib_dir;
-
-   chdir $work_dir;
 
 }
 
-END {
-
-    #########
-    # Restore working directory and @INC back to when enter script
-    #
-    @INC = @__restore_inc__;
-    chdir $__restore_dir__;
-}
 
 #####
 # New $fu object
 #
-my $fu = 'File::FileUtil';
+my $fu = 'File::Package';
 
 #######
 #
