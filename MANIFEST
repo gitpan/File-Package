@@ -4,3 +4,5 @@ Makefile.PL
 README
 lib/File/Package.pm
 t/File/package.t
+t/File/BadLoad.pm
+t/File/BadVocab.pm

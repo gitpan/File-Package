@@ -7,11 +7,13 @@ use warnings;
 use warnings::register;
 
 use vars qw($VERSION $DATE);
-$VERSION = '0.08';
-$DATE = '2003/07/03';
+$VERSION = '0.09';
+$DATE = '2003/09/13';
 
+use File::Spec;
 use File::Package;
 use Test;
+use Cwd;
 
 ######
 #
@@ -20,17 +22,38 @@ use Test;
 # use a BEGIN block so we print our plan before Module Under Test is loaded
 #
 BEGIN { 
-   use vars qw( $__tests__);
+   use vars qw( $__tests__ @__restore_inc__ $__restore_dir__);
 
    ########
    # Create the test plan by supplying the number of tests
    # and the todo tests
    #
-   $__tests__ = 2;
+   $__tests__ = 8;
    plan(tests => $__tests__);
 
+   ########
+   # Working directory is that of the script file
+   #
+   $__restore_dir__ = cwd();
+   my ($vol, $dirs, undef) = File::Spec->splitpath( __FILE__ );
+   chdir $vol if $vol;
+   chdir $dirs if $dirs;
+
+   @__restore_inc__ = @INC;
+   chdir File::Spec->updir();
+   chdir File::Spec->updir();
+   unshift @INC, cwd();
+
+}
 
 
+END {
+
+    #########
+    # Restore working directory  to when enter script
+    #
+    chdir $__restore_dir__;
+    @INC = @__restore_inc__
 }
 
 
@@ -58,6 +81,70 @@ ok ($loaded = $fu->is_package_loaded('File::Basename'), '');
 print "# load_package\n";
 my $errors = $fu->load_package( 'File::Basename' );
 skip($loaded, $errors, '');
+
+#######
+# 
+# ok:  3
+#
+# R:
+# 
+print "# bad load\n";
+$errors = $fu->load_package( 't::File::BadLoad' );
+ok($errors ne '', 1, $errors);
+
+
+#######
+# 
+# ok:  4
+#
+# R:
+# 
+print "# bad vocab\n";
+$errors = $fu->load_package( 't::File::BadVocab' );
+ok($errors ne '', 1, $errors);
+
+
+#######
+#
+# ok: 5 
+#
+# R:
+#
+print "# import function\n";
+ok( !defined(&{$File::Package::{'find'}}), 1);
+
+
+#######
+#
+# ok: 6
+#
+# R:
+#
+print "# import function\n";
+$fu->load_package('File::Find', 'find'); 
+ok( defined(&{$File::Package::{'find'}}), 1);
+
+
+#######
+#
+# ok: 7 
+#
+# R:
+#
+print "# import function\n";
+ok( !defined(&{$File::Package::{'finddepth'}}), 1);
+
+
+#######
+#
+# ok: 8
+#
+# R:
+#
+print "# import all functions\n";
+$fu->load_package('File::Find', ''); 
+ok( defined(&{$File::Package::{'finddepth'}}), 1);
+
 
 __END__
 

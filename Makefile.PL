@@ -18,23 +18,17 @@
 use ExtUtils::MakeMaker;
 
 my $tests = join ' ',unix2os('t/File/package.t');
-my $exe;
-if( $exe ) {
-  $exe = [join ' ',unix2os($exe)];
-}
-else {
-   $exe = [];
-}
+
 
 WriteMakefile(
     NAME => 'File::Package',
     DISTNAME => 'File-Package',
-    VERSION  => '0.02',
+    VERSION  => '0.03',
     dist     => {COMPRESS => 'gzip',
                 'gz' => 'gz'},
     test     => {TESTS => $tests},
-    PREREQ_PM => {},
-    EXE_FILES => $exe,
+    
+    
 
     ($] >= 5.005 ?     
         (AUTHOR    => 'SoftwareDiamonds.com E<lt>support@SoftwareDiamonds.comE<gt>',
