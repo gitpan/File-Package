@@ -7,8 +7,8 @@ use warnings;
 use warnings::register;
 
 use vars qw($VERSION $DATE);
-$VERSION = '0.02';   # automatically generated file
-$DATE = '2004/04/10';
+$VERSION = '0.03';   # automatically generated file
+$DATE = '2004/04/26';
 
 
 ##### Demonstration Script ####
@@ -41,7 +41,7 @@ BEGIN {
     use Cwd;
     use File::Spec;
     use FindBin;
-    use Test::Tech qw(tech_config plan demo skip_tests);
+    use Test::Tech qw(demo is_skip plan skip_tests tech_config );
 
     ########
     # The working directory for this script file is the directory where
@@ -102,6 +102,15 @@ demo( "\ \ \ \ use\ File\:\:Package\;\
           use File::Package;
     my $uut = 'File::Package';; # execution
 
+print << 'EOF';
+
+ => ##################
+ => # Good Load
+ => # 
+ => ###
+
+EOF
+
 demo( "my\ \$error\ \=\ \$uut\-\>load_package\(\ \'File\:\:Basename\'\ \)", # typed in command           
       my $error = $uut->load_package( 'File::Basename' )); # execution
 
@@ -122,33 +131,105 @@ demo( "\$error\ \=\ \$uut\-\>load_package\(\ \'_File_\:\:Hyphen\-Test\'\ \)", # 
       $error = $uut->load_package( '_File_::Hyphen-Test' )); # execution
 
 
+print << 'EOF';
+
+ => ##################
+ => # No &File::Find::find import baseline
+ => # 
+ => ###
+
+EOF
+
 demo( "\!defined\(\$main\:\:\{\'find\'\}\)", # typed in command           
       !defined($main::{'find'})); # execution
 
+
+print << 'EOF';
+
+ => ##################
+ => # Load File::Find, Import &File::Find::find
+ => # 
+ => ###
+
+EOF
 
 demo( "\$error\ \=\ \$uut\-\>load_package\(\ \'File\:\:Find\'\,\ \'find\'\,\ \[\'File\:\:Find\'\]\ \)", # typed in command           
       $error = $uut->load_package( 'File::Find', 'find', ['File::Find'] )); # execution
 
 
+print << 'EOF';
+
+ => ##################
+ => # &File::Find::find imported
+ => # 
+ => ###
+
+EOF
+
 demo( "defined\(\$main\:\:\{\'find\'\}\)", # typed in command           
       defined($main::{'find'})); # execution
 
 
+print << 'EOF';
+
+ => ##################
+ => # &File::Find::finddepth not imported
+ => # 
+ => ###
+
+EOF
+
 demo( "\!defined\(\$main\:\:\{\'finddepth\'\}\)", # typed in command           
       !defined($main::{'finddepth'})); # execution
 
+
+print << 'EOF';
+
+ => ##################
+ => # Import error
+ => # 
+ => ###
+
+EOF
 
 demo( "\$uut\-\>load_package\(\ \'File\:\:Find\'\,\ \'Jolly_Green_Giant\'\)", # typed in command           
       $uut->load_package( 'File::Find', 'Jolly_Green_Giant')); # execution
 
 
+print << 'EOF';
+
+ => ##################
+ => # &File::Find::finddepth still no imported
+ => # 
+ => ###
+
+EOF
+
 demo( "\!defined\(\$main\:\:\{\'finddepth\'\}\)", # typed in command           
       !defined($main::{'finddepth'})); # execution
 
 
+print << 'EOF';
+
+ => ##################
+ => # Import all File::Find functions
+ => # 
+ => ###
+
+EOF
+
 demo( "\$error\ \=\ \$uut\-\>load_package\(\ \'File\:\:Find\'\,\ \'\'\)", # typed in command           
       $error = $uut->load_package( 'File::Find', '')); # execution
 
+
+print << 'EOF';
+
+ => ##################
+ => # &File::Find::finddepth imported
+ => # 
+ => ###
+
+EOF
 
 demo( "defined\(\$main\:\:\{\'finddepth\'\}\)", # typed in command           
       defined($main::{'finddepth'})); # execution

@@ -12,3 +12,5 @@ t/File/_File_/Hyphen-Test.pm
 t/File/_File_/Multi.pm
 t/File/Test/Tech.pm
 t/File/Data/Secs2.pm
+t/File/Data/SecsPack.pm
+t/File/Data/Startup.pm

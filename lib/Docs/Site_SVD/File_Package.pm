@@ -10,26 +10,28 @@ use warnings;
 use warnings::register;
 
 use vars qw($VERSION $DATE $FILE );
-$VERSION = '0.05';
-$DATE = '2004/04/10';
+$VERSION = '0.06';
+$DATE = '2004/04/26';
 $FILE = __FILE__;
 
 use vars qw(%INVENTORY);
 %INVENTORY = (
-    'lib/Docs/Site_SVD/File_Package.pm' => [qw(0.05 2004/04/10), 'revised 0.04'],
-    'MANIFEST' => [qw(0.05 2004/04/10), 'generated, replaces 0.04'],
-    'Makefile.PL' => [qw(0.05 2004/04/10), 'generated, replaces 0.04'],
-    'README' => [qw(0.05 2004/04/10), 'generated, replaces 0.04'],
-    'lib/File/Package.pm' => [qw(1.15 2004/04/10), 'revised 1.13'],
-    't/File/Package.d' => [qw(0.02 2004/04/10), 'revised 0.01'],
-    't/File/Package.pm' => [qw(0.02 2004/04/10), 'revised 0.01'],
-    't/File/Package.t' => [qw(0.11 2004/04/10), 'revised 0.1'],
-    't/File/_File_/BadLoad.pm' => [qw(0.01 2004/04/10), 'new'],
-    't/File/_File_/BadPackage.pm' => [qw(0.01 2004/04/10), 'new'],
-    't/File/_File_/Hyphen-Test.pm' => [qw(1.15 2004/04/10), 'new'],
-    't/File/_File_/Multi.pm' => [qw(1.15 2004/04/10), 'new'],
-    't/File/Test/Tech.pm' => [qw(1.17 2004/04/10), 'new'],
-    't/File/Data/Secs2.pm' => [qw(1.15 2004/04/10), 'new'],
+    'lib/Docs/Site_SVD/File_Package.pm' => [qw(0.06 2004/04/26), 'revised 0.05'],
+    'MANIFEST' => [qw(0.06 2004/04/26), 'generated, replaces 0.05'],
+    'Makefile.PL' => [qw(0.06 2004/04/26), 'generated, replaces 0.05'],
+    'README' => [qw(0.06 2004/04/26), 'generated, replaces 0.05'],
+    'lib/File/Package.pm' => [qw(1.16 2004/04/26), 'revised 1.15'],
+    't/File/Package.d' => [qw(0.03 2004/04/26), 'revised 0.02'],
+    't/File/Package.pm' => [qw(0.01 2004/04/10), 'unchanged'],
+    't/File/Package.t' => [qw(0.12 2004/04/26), 'revised 0.11'],
+    't/File/_File_/BadLoad.pm' => [qw(0.01 2004/04/10), 'unchanged'],
+    't/File/_File_/BadPackage.pm' => [qw(0.01 2004/04/10), 'unchanged'],
+    't/File/_File_/Hyphen-Test.pm' => [qw(1.15 2004/04/10), 'unchanged'],
+    't/File/_File_/Multi.pm' => [qw(1.15 2004/04/10), 'unchanged'],
+    't/File/Test/Tech.pm' => [qw(1.21 2004/04/26), 'revised 1.17'],
+    't/File/Data/Secs2.pm' => [qw(1.18 2004/04/26), 'revised 1.15'],
+    't/File/Data/SecsPack.pm' => [qw(0.03 2004/04/26), 'new'],
+    't/File/Data/Startup.pm' => [qw(0.03 2004/04/26), 'new'],
 
 );
 
@@ -54,13 +56,13 @@ use vars qw(%INVENTORY);
 
  for
 
-  File::Package - Load packages and import symbols gracefully
+  File::Package - test load a pm and import symbs without eval and $@ misbehavoirs
 
- Revision: D
+ Revision: E
 
- Version: 0.05
+ Version: 0.06
 
- Date: 2004/04/10
+ Date: 2004/04/26
 
  Prepared for: General Public 
 
@@ -101,7 +103,7 @@ when the 'Compress::Zlib' module fails to load.
 
 =head2 1.3 Document overview.
 
-This document releases File::Package version 0.05
+This document releases File::Package version 0.06
 providing a description of the inventory, installation
 instructions and other information necessary to
 utilize and track this release.
@@ -116,12 +118,12 @@ system file specification.
 
 This document releases the file 
 
- File-Package-0.05.tar.gz
+ File-Package-0.06.tar.gz
 
 found at the following repository(s):
 
   http://www.softwarediamonds/packages/
-  http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/
+  http://www.perl.com/CPAN/authors/id/S/SO/SOFTDIA/
 
 Restrictions regarding duplication and license provisions
 are as follows:
@@ -188,25 +190,27 @@ consists of the following files:
 
  file                                                         version date       comment
  ------------------------------------------------------------ ------- ---------- ------------------------
- lib/Docs/Site_SVD/File_Package.pm                            0.05    2004/04/10 revised 0.04
- MANIFEST                                                     0.05    2004/04/10 generated, replaces 0.04
- Makefile.PL                                                  0.05    2004/04/10 generated, replaces 0.04
- README                                                       0.05    2004/04/10 generated, replaces 0.04
- lib/File/Package.pm                                          1.15    2004/04/10 revised 1.13
- t/File/Package.d                                             0.02    2004/04/10 revised 0.01
- t/File/Package.pm                                            0.02    2004/04/10 revised 0.01
- t/File/Package.t                                             0.11    2004/04/10 revised 0.1
- t/File/_File_/BadLoad.pm                                     0.01    2004/04/10 new
- t/File/_File_/BadPackage.pm                                  0.01    2004/04/10 new
- t/File/_File_/Hyphen-Test.pm                                 1.15    2004/04/10 new
- t/File/_File_/Multi.pm                                       1.15    2004/04/10 new
- t/File/Test/Tech.pm                                          1.17    2004/04/10 new
- t/File/Data/Secs2.pm                                         1.15    2004/04/10 new
+ lib/Docs/Site_SVD/File_Package.pm                            0.06    2004/04/26 revised 0.05
+ MANIFEST                                                     0.06    2004/04/26 generated, replaces 0.05
+ Makefile.PL                                                  0.06    2004/04/26 generated, replaces 0.05
+ README                                                       0.06    2004/04/26 generated, replaces 0.05
+ lib/File/Package.pm                                          1.16    2004/04/26 revised 1.15
+ t/File/Package.d                                             0.03    2004/04/26 revised 0.02
+ t/File/Package.pm                                            0.01    2004/04/10 unchanged
+ t/File/Package.t                                             0.12    2004/04/26 revised 0.11
+ t/File/_File_/BadLoad.pm                                     0.01    2004/04/10 unchanged
+ t/File/_File_/BadPackage.pm                                  0.01    2004/04/10 unchanged
+ t/File/_File_/Hyphen-Test.pm                                 1.15    2004/04/10 unchanged
+ t/File/_File_/Multi.pm                                       1.15    2004/04/10 unchanged
+ t/File/Test/Tech.pm                                          1.21    2004/04/26 revised 1.17
+ t/File/Data/Secs2.pm                                         1.18    2004/04/26 revised 1.15
+ t/File/Data/SecsPack.pm                                      0.03    2004/04/26 new
+ t/File/Data/Startup.pm                                       0.03    2004/04/26 new
 
 
 =head2 3.3 Changes
 
-The file names from 0.04 were changed as follows:
+The file names from 0.05 were changed as follows:
 
  return if $file =~ s=lib/File/FileUtil.pm=lib/File/Package.pm=;
  return if $file =~ s=t/File/FileUtil/FileUtil.t=t/File/package.t=;
@@ -301,10 +305,10 @@ t/Test/TestUtil/TestUtil....NOK 18# Test 18 got: '$VAR1 = '\\=head1 Title Page
  for
 
 
-  File::Package - Load packages and import symbols gracefully
+  File::Package - test load a pm and import symbs without eval and $@ misbehavoirs
 
 
- Revision: D
+ Revision: E
 
 [snip]
 
@@ -319,7 +323,7 @@ t/Test/TestUtil/TestUtil....NOK 18# Test 18 got: '$VAR1 = '\\=head1 Title Page
  for
 
 
-  File::Package - Load packages and import symbols gracefully
+  File::Package - test load a pm and import symbs without eval and $@ misbehavoirs
 
 What we have before, was a totally "failure to communicate." aka Cool Hand Luke. 
 VAR1 was empty. Now VAR1 has something. It is not completely dead.
@@ -451,6 +455,19 @@ Coordiated with the lastest Test::STDmaker by moving the
 test library from tlib to t/File, the same directory as the test script
 and deleting the test library File::TestPath program module.
 
+=item File-Package-0.06
+
+Added C<Carp::longmess>, that dumps the call stack, to the
+Carp::croak trap function.
+
+=item File-Package-0.07
+
+Expanded the description.
+
+Under the Perl 5.6, Microsoft distribute, C<Carp> program module,
+C<import> sends warings out using C<&Carp::carp> function as well
+as C<Carp::croak> function. Adjust to also pick up these messages.
+
 =back
 
 =head2 3.4 Adaptation data.
@@ -487,15 +504,15 @@ If all else fails, the file may be manually installed.
 Enter one of the following repositories in a web browser:
 
   http://www.softwarediamonds/packages/
-  http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/
+  http://www.perl.com/CPAN/authors/id/S/SO/SOFTDIA/
 
-Right click on 'File-Package-0.05.tar.gz' and download to a temporary
+Right click on 'File-Package-0.06.tar.gz' and download to a temporary
 installation directory.
 Enter the following where $make is 'nmake' for microsoft
 windows; otherwise 'make'.
 
- gunzip File-Package-0.05.tar.gz
- tar -xf File-Package-0.05.tar
+ gunzip File-Package-0.06.tar.gz
+ tar -xf File-Package-0.06.tar
  perl Makefile.PL
  $make test
  $make install
@@ -613,15 +630,15 @@ Plain Old Documentation
 __DATA__
 
 DISTNAME: File-Package^
-VERSION : 0.05^
+VERSION : 0.06^
 FREEZE: 1^
 PREVIOUS_DISTNAME:  ^
-PREVIOUS_RELEASE: 0.04^
-REVISION: D^
+PREVIOUS_RELEASE: 0.05^
+REVISION: E^
 
 AUTHOR  : SoftwareDiamonds.com E<lt>support@SoftwareDiamonds.comE<gt>^
-ABSTRACT: Load packages and import symbols gracefully^
-TITLE   :  File::Package - Load packages and import symbols gracefully^
+ABSTRACT: test load a pm and import symbols without eval and $@ misbehavoirs^
+TITLE   :  File::Package - test load a pm and import symbs without eval and $@ misbehavoirs^
 END_USER: General Public^
 COPYRIGHT: copyright © 2003 Software Diamonds^
 CLASSIFICATION: NONE^
@@ -631,7 +648,7 @@ SVD_FSPEC: Unix^
 REPOSITORY_DIR: packages^
 REPOSITORY: 
   http://www.softwarediamonds/packages/
-  http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/
+  http://www.perl.com/CPAN/authors/id/S/SO/SOFTDIA/
 ^
 
 COMPRESS: gzip^
@@ -652,6 +669,8 @@ t/File/_File_/Hyphen-Test.pm
 t/File/_File_/Multi.pm
 lib/Test/Tech.pm => t/File/Test/Tech.pm
 lib/Data/Secs2.pm => t/File/Data/Secs2.pm
+lib/Data/SecsPack.pm => t/File/Data/SecsPack.pm
+lib/Data/Startup.pm => t/File/Data/Startup.pm
 ^
 
 PREREQ_PM:  ^
@@ -900,6 +919,19 @@ directory as the test script.
 Coordiated with the lastest Test::STDmaker by moving the
 test library from tlib to t/File, the same directory as the test script
 and deleting the test library File::TestPath program module.
+
+\=item File-Package-0.06
+
+Added C<Carp::longmess>, that dumps the call stack, to the
+Carp::croak trap function.
+
+\=item File-Package-0.07
+
+Expanded the description.
+
+Under the Perl 5.6, Microsoft distribute, C<Carp> program module,
+C<import> sends warings out using C<&Carp::carp> function as well
+as C<Carp::croak> function. Adjust to also pick up these messages.
 
 \=back
 

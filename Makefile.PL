@@ -23,7 +23,7 @@ my $tests = join ' ',unix2os('t/File/Package.t');
 WriteMakefile(
     NAME => 'File::Package',
     DISTNAME => 'File-Package',
-    VERSION  => '0.05',
+    VERSION  => '0.06',
     dist     => {COMPRESS => 'gzip',
                 'gz' => 'gz'},
     test     => {TESTS => $tests},
@@ -32,7 +32,7 @@ WriteMakefile(
 
     ($] >= 5.005 ?     
         (AUTHOR    => 'SoftwareDiamonds.com E<lt>support@SoftwareDiamonds.comE<gt>',
-        ABSTRACT  => 'Load packages and import symbols gracefully', ) : ()),
+        ABSTRACT  => 'test load a pm and import symbols without eval and $@ misbehavoirs', ) : ()),
 );
 
 

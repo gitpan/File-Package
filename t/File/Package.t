@@ -7,8 +7,8 @@ use warnings;
 use warnings::register;
 
 use vars qw($VERSION $DATE $FILE);
-$VERSION = '0.11';   # automatically generated file
-$DATE = '2004/04/10';
+$VERSION = '0.12';   # automatically generated file
+$DATE = '2004/04/26';
 $FILE = __FILE__;
 
 
@@ -78,7 +78,7 @@ BEGIN {
    # and the todo tests
    #
    require Test::Tech;
-   Test::Tech->import( qw(plan ok skip skip_tests tech_config finish) );
+   Test::Tech->import( qw(finish is_skip ok plan skip skip_tests tech_config) );
    plan(tests => 14);
 
 }
@@ -92,6 +92,45 @@ END {
    @INC = @lib::ORIG_INC;
    chdir $__restore_dir__;
 }
+
+
+=head1 comment_out
+
+###
+# Have been problems with debugger with trapping CARP
+#
+
+####
+# Poor man's eval where the test script traps off the Carp::croak 
+# Carp::confess functions.
+#
+# The Perl authorities have Core::die locked down tight so
+# it is next to impossible to trap off of Core::die. Lucky 
+# must everyone uses Carp to die instead of just dieing.
+#
+use Carp;
+use vars qw($restore_croak $croak_die_error $restore_confess $confess_die_error);
+$restore_croak = \&Carp::croak;
+$croak_die_error = '';
+$restore_confess = \&Carp::confess;
+$confess_die_error = '';
+no warnings;
+*Carp::croak = sub {
+   $croak_die_error = '# Test Script Croak. ' . (join '', @_);
+   $croak_die_error .= Carp::longmess (join '', @_);
+   $croak_die_error =~ s/\n/\n#/g;
+       goto CARP_DIE; # once croak can not continue
+};
+*Carp::confess = sub {
+   $confess_die_error = '# Test Script Confess. ' . (join '', @_);
+   $confess_die_error .= Carp::longmess (join '', @_);
+   $confess_die_error =~ s/\n/\n#/g;
+       goto CARP_DIE; # once confess can not continue
+
+};
+use warnings;
+=cut
+
 
    # Perl code from C:
     use File::Package;
@@ -205,6 +244,24 @@ ok(  defined($main::{'finddepth'}), # actual results
 
 #  ok:  14
 
+
+=head1 comment out
+
+# does not work with debugger
+CARP_DIE:
+    if ($croak_die_error || $confess_die_error) {
+        print $Test::TESTOUT = "not ok $Test::ntest\n";
+        $Test::ntest++;
+        print $Test::TESTERR $croak_die_error . $confess_die_error;
+        $croak_die_error = '';
+        $confess_die_error = '';
+        skip_tests(1, 'Test invalid because of Carp die.');
+    }
+    no warnings;
+    *Carp::croak = $restore_croak;    
+    *Carp::confess = $restore_confess;
+    use warnings;
+=cut
 
     finish();
 
