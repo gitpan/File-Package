@@ -11,8 +11,8 @@ use warnings;
 use warnings::register;
 
 use vars qw($VERSION $DATE $FILE);
-$VERSION = '1.12';
-$DATE = '2003/09/13';
+$VERSION = '1.13';
+$DATE = '2003/09/20';
 $FILE = __FILE__;
 
 use vars qw(@ISA @EXPORT_OK);
@@ -22,9 +22,9 @@ require Exporter;
 
 use SelfLoader;
 
-1;
+# 1;
 
-__DATA__
+# __DATA__
 
 
 ######
@@ -48,14 +48,17 @@ sub load_package
          return $error;      
      }
      if (File::Package->is_package_loaded( $package )) {
+         my $restore_level = $Exporter::ExportLevel;
+         $Exporter::ExportLevel = 1;
          if( @import ) {
              if ($import[0] ) {
                  $package->import( @import );
              }
-             else {
-                 $package->import( );
-             }
          }
+         else {
+             $package->import( );
+         }
+         $Exporter::ExportLevel = $restore_level;  
          return '';
      }
 
@@ -83,14 +86,19 @@ sub load_package
      unless (File::Package->is_package_loaded( $package )) {
          return "# $package loaded but package vocabulary absent.\n";
      }
-     if ($import[0] ) {
-         $package->import( @import );
+     my $restore_level = $Exporter::ExportLevel;
+     $Exporter::ExportLevel = 1;
+     if( @import ) {
+         if ($import[0] ) {
+             $package->import( @import );
+         }
      }
      else {
          $package->import( );
      }
-     ''
+     $Exporter::ExportLevel = $restore_level;  
 
+     ''
 }
 
 
@@ -205,12 +213,167 @@ For example, if I<File::Basename> is not loaded
 
 Coming soon.
 
+=head1 DEMONSTRATION
+
+ ~~~~~~ Demonstration overview ~~~~~
+
+Perl code begins with the prompt
+
+ =>
+
+The selected results from executing the Perl Code 
+follow on the next lines. For example,
+
+ => 2 + 2
+ 4
+
+ ~~~~~~ The demonstration follows ~~~~~
+
+ =>     use File::Spec;
+
+ =>     use File::Package;
+ =>     my $uut = 'File::Package';
+ =>     use File::Package;
+ => my $errors = $uut->load_package( 'File::Basename' )
+ ''
+
+ => '' ne ($errors = $uut->load_package( 't::File::BadLoad' ) )
+ '1'
+
+ => '' ne ($errors = $uut->load_package( 't::File::BadVocab' ) )
+ '1'
+
+ => !defined($main::{'find'})
+ '1'
+
+ => $errors = $uut->load_package( 'File::Find', 'find' )
+ ''
+
+ => defined($main::{'find'})
+ '1'
+
+ => !defined($main::{'finddepth'})
+ '1'
+
+ => $errors = $uut->load_package( 'File::Find', '')
+ ''
+
+ => !defined($main::{'finddepth'})
+ '1'
+
+ => $errors = $uut->load_package( 'File::Find')
+ ''
+
+ => defined($main::{'finddepth'})
+ '1'
+
+
+=head1 QUALITY ASSURANCE
+
+Running the test script 'Package.t' found in
+the "File-Package-$VERSION.tar.gz" distribution file verifies
+the requirements for this module.
+
+All testing software and documentation
+stems from the 
+Software Test Description (L<STD|Docs::US_DOD::STD>)
+program module 't::File::Package',
+found in the distribution file 
+"File-Package-$VERSION.tar.gz". 
+
+The 't::File::Package' L<STD|Docs::US_DOD::STD> POD contains
+a tracebility matix between the
+requirements established above for this module, and
+the test steps identified by a
+'ok' number from running the 'Package.t'
+test script.
+
+The t::File::Package' L<STD|Docs::US_DOD::STD>
+program module '__DATA__' section contains the data 
+to perform the following:
+
+=over 4
+
+=item *
+
+to generate the test script 'Package.t'
+
+=item *
+
+generate the tailored 
+L<STD|Docs::US_DOD::STD> POD in
+the 't::File::Package' module, 
+
+=item *
+
+generate the 'Package.d' demo script, 
+
+=item *
+
+replace the POD demonstration section
+herein with the demo script
+'Package.d' output, and
+
+=item *
+
+run the test script using Test::Harness
+with or without the verbose option,
+
+=back
+
+To perform all the above, prepare
+and run the automation software as 
+follows:
+
+=over 4
+
+=item *
+
+Install "Test_STDmaker-$VERSION.tar.gz"
+from one of the respositories only
+if it has not been installed:
+
+=over 4
+
+=item *
+
+http://www.softwarediamonds/packages/
+
+=item *
+
+http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/
+
+=back
+  
+=item *
+
+manually place the script tmake.pl
+in "Test_STDmaker-$VERSION.tar.gz' in
+the site operating system executable 
+path only if it is not in the 
+executable path
+
+=item *
+
+place the 't::File::Package' at the same
+level in the directory struture as the
+directory holding the 'File::Package'
+module
+
+=item *
+
+execute the following in any directory:
+
+ tmake -test_verbose -replace -run -pm=t::File::Package
+
+=back
+
 =head1 NOTES
 
 =head2 FILES
 
 The installation of the
-"File-AnySpec-$VERSION.tar.gz" distribution file
+"File-Package-$VERSION.tar.gz" distribution file
 installs the 'Docs::Site_SVD::File_Package'
 L<SVD|Docs::US_DOD::SVD> program module.
 
@@ -218,7 +381,7 @@ The __DATA__ data section of the
 'Docs::Site_SVD::File_Package' contains all
 the necessary data to generate the POD
 section of 'Docs::Site_SVD::File_Package' and
-the "File-AnySpec-$VERSION.tar.gz" distribution file.
+the "File-Package-$VERSION.tar.gz" distribution file.
 
 To make use of the 
 'Docs::Site_SVD::File_Package'

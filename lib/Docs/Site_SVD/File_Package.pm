@@ -10,20 +10,26 @@ use warnings;
 use warnings::register;
 
 use vars qw($VERSION $DATE $FILE );
-$VERSION = '0.03';
-$DATE = '2003/09/13';
+$VERSION = '0.04';
+$DATE = '2003/09/20';
 $FILE = __FILE__;
 
 use vars qw(%INVENTORY);
 %INVENTORY = (
-    'lib/Docs/Site_SVD/File_Package.pm' => [qw(0.03 2003/09/13), 'revised 0.02'],
-    'MANIFEST' => [qw(0.03 2003/09/13), 'generated, replaces 0.02'],
-    'Makefile.PL' => [qw(0.03 2003/09/13), 'generated, replaces 0.02'],
-    'README' => [qw(0.03 2003/09/13), 'generated, replaces 0.02'],
-    'lib/File/Package.pm' => [qw(1.12 2003/09/13), 'revised 1.1'],
-    't/File/package.t' => [qw(0.09 2003/09/13), 'revised 0.08'],
-    't/File/BadLoad.pm' => [qw(0.01 2003/09/13), 'new'],
-    't/File/BadVocab.pm' => [qw(0.01 2003/09/13), 'new'],
+    'lib/Docs/Site_SVD/File_Package.pm' => [qw(0.04 2003/09/20), 'revised 0.03'],
+    'MANIFEST' => [qw(0.04 2003/09/20), 'generated, replaces 0.03'],
+    'Makefile.PL' => [qw(0.04 2003/09/20), 'generated, replaces 0.03'],
+    'README' => [qw(0.04 2003/09/20), 'generated, replaces 0.03'],
+    'lib/File/Package.pm' => [qw(1.13 2003/09/20), 'revised 1.12'],
+    't/File/Package.d' => [qw(0.01 2003/09/20), 'new'],
+    't/File/Package.pm' => [qw(0.01 2003/09/20), 'new'],
+    't/File/Package.t' => [qw(0.1 2003/09/20), 'revised 0.09'],
+    't/File/BadLoad.pm' => [qw(0.01 2003/09/13), 'unchanged'],
+    't/File/BadVocab.pm' => [qw(0.01 2003/09/13), 'unchanged'],
+    'tlib/File/SmartNL.pm' => [qw(1.12 2003/09/20), 'new'],
+    'tlib/Text/Scrub.pm' => [qw(1.11 2003/09/20), 'new'],
+    'tlib/Test/Tech.pm' => [qw(1.15 2003/09/20), 'new'],
+    'tlib/Data/Secs2.pm' => [qw(1.15 2003/09/20), 'new'],
 
 );
 
@@ -48,13 +54,13 @@ use vars qw(%INVENTORY);
 
  for
 
-  File::FileUtil - Generic file utilites developed originally for Test::STDmaker and ExtUtils::SVDmaker
+  File::Package - Load packages and import symbols gracefully
 
- Revision: B
+ Revision: C
 
- Version: 0.03
+ Version: 0.04
 
- Date: 2003/09/13
+ Date: 2003/09/20
 
  Prepared for: General Public 
 
@@ -81,23 +87,21 @@ extend the capabilities of the Perl language.
 One very useful test of the installation of a package is whether
 or not the package loaded.
 If it did not load, the reason it did not load is helpful
-diagnostics.
-
-This information is readily available when loaded at a local site.
-However, it the load occurs at a remote site and the load crashes
-Perl, the remote tester usually will not have this information
-readily available.
+diagnostics and may be used to programically (automatically) take corrective
+action.
 
 The load_package method attempts to capture any load problems by
 loading the package with a "require " under an eval and capturing
 all the "warn" and $@ messages.
-The error messages are returned so that they may be appropriately
-tested and if not as expected the actual and expected included
-in failure report back to the author of the package.
+The error messages are returned with a warn instead of die so
+that the using program may take the appropriate action such
+as reporting the errors back to the author when used in test
+software or perhaps falling back on a system 'gzip' command
+when the 'Compress::Zlib' module fails to load.
 
 =head2 1.3 Document overview.
 
-This document releases File::Package version 0.03
+This document releases File::Package version 0.04
 providing a description of the inventory, installation
 instructions and other information necessary to
 utilize and track this release.
@@ -113,8 +117,8 @@ system file specification.
 This document releases the file found
 at the following repository(s):
 
-   http://www.softwarediamonds/packages/File-Package-0.03
-   http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/File-Package-0.03
+   http://www.softwarediamonds/packages/File-Package-0.04
+   http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/File-Package-0.04
 
 
 Restrictions regarding duplication and license provisions
@@ -182,19 +186,25 @@ consists of the following files:
 
  file                                                         version date       comment
  ------------------------------------------------------------ ------- ---------- ------------------------
- lib/Docs/Site_SVD/File_Package.pm                            0.03    2003/09/13 revised 0.02
- MANIFEST                                                     0.03    2003/09/13 generated, replaces 0.02
- Makefile.PL                                                  0.03    2003/09/13 generated, replaces 0.02
- README                                                       0.03    2003/09/13 generated, replaces 0.02
- lib/File/Package.pm                                          1.12    2003/09/13 revised 1.1
- t/File/package.t                                             0.09    2003/09/13 revised 0.08
- t/File/BadLoad.pm                                            0.01    2003/09/13 new
- t/File/BadVocab.pm                                           0.01    2003/09/13 new
+ lib/Docs/Site_SVD/File_Package.pm                            0.04    2003/09/20 revised 0.03
+ MANIFEST                                                     0.04    2003/09/20 generated, replaces 0.03
+ Makefile.PL                                                  0.04    2003/09/20 generated, replaces 0.03
+ README                                                       0.04    2003/09/20 generated, replaces 0.03
+ lib/File/Package.pm                                          1.13    2003/09/20 revised 1.12
+ t/File/Package.d                                             0.01    2003/09/20 new
+ t/File/Package.pm                                            0.01    2003/09/20 new
+ t/File/Package.t                                             0.1     2003/09/20 revised 0.09
+ t/File/BadLoad.pm                                            0.01    2003/09/13 unchanged
+ t/File/BadVocab.pm                                           0.01    2003/09/13 unchanged
+ tlib/File/SmartNL.pm                                         1.12    2003/09/20 new
+ tlib/Text/Scrub.pm                                           1.11    2003/09/20 new
+ tlib/Test/Tech.pm                                            1.15    2003/09/20 new
+ tlib/Data/Secs2.pm                                           1.15    2003/09/20 new
 
 
 =head2 3.3 Changes
 
-The file names from 0.02 were changed as follows:
+The file names from 0.03 were changed as follows:
 
  return if $file =~ s=lib/File/FileUtil.pm=lib/File/Package.pm=;
  return if $file =~ s=t/File/FileUtil/FileUtil.t=t/File/package.t=;
@@ -289,10 +299,10 @@ t/Test/TestUtil/TestUtil....NOK 18# Test 18 got: '$VAR1 = '\\=head1 Title Page
  for
 
 
-  File::FileUtil - Generic file utilites developed originally for Test::STDmaker and ExtUtils::SVDmaker
+  File::Package - Load packages and import symbols gracefully
 
 
- Revision: B
+ Revision: C
 
 [snip]
 
@@ -307,7 +317,7 @@ t/Test/TestUtil/TestUtil....NOK 18# Test 18 got: '$VAR1 = '\\=head1 Title Page
  for
 
 
-  File::FileUtil - Generic file utilites developed originally for Test::STDmaker and ExtUtils::SVDmaker
+  File::Package - Load packages and import symbols gracefully
 
 What we have before, was a totally "failure to communicate." aka Cool Hand Luke. 
 VAR1 was empty. Now VAR1 has something. It is not completely dead.
@@ -425,6 +435,12 @@ Added subroutine interfaces.
 
 Added @import input to load_packages method
 
+=item File-Package-0.06
+
+Upgraded the 'tlib\Test\Tech' and changed the
+name of 'tlib\Data\strify' to 'tlib\Data\Secs2'.
+The new name is more self-explanatory.
+
 =back
 
 =head2 3.4 Adaptation data.
@@ -458,8 +474,8 @@ Follow the instructions for the the chosen installation software.
 
 The distribution file is at the following respositories:
 
-   http://www.softwarediamonds/packages/File-Package-0.03
-   http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/File-Package-0.03
+   http://www.softwarediamonds/packages/File-Package-0.04
+   http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/File-Package-0.04
 
 
 =item Prerequistes.
@@ -476,7 +492,7 @@ None.
 Most Perl installation software will run the following test script(s)
 as part of the installation:
 
- t/File/package.t
+ t/File/Package.t
 
 =item Installation support.
 
@@ -569,15 +585,15 @@ Plain Old Documentation
 __DATA__
 
 DISTNAME: File-Package^
-VERSION : 0.03^
+VERSION : 0.04^
 FREEZE: 1^
 PREVIOUS_DISTNAME:  ^
-PREVIOUS_RELEASE: 0.02^
-REVISION: B^
+PREVIOUS_RELEASE: 0.03^
+REVISION: C^
 
 AUTHOR  : SoftwareDiamonds.com E<lt>support@SoftwareDiamonds.comE<gt>^
-ABSTRACT: Generic file utilities originally developed to support Test::STDmaker^
-TITLE   :  File::FileUtil - Generic file utilites developed originally for Test::STDmaker and ExtUtils::SVDmaker^
+ABSTRACT: Load packages and import symbols gracefully^
+TITLE   :  File::Package - Load packages and import symbols gracefully^
 END_USER: General Public^
 COPYRIGHT: copyright © 2003 Software Diamonds^
 CLASSIFICATION: NONE^
@@ -601,13 +617,17 @@ return if $file =~ s=t/File/FileUtil/FileUtil.t=t/File/package.t=;
 
 AUTO_REVISE: 
 lib/File/Package.pm
-t/File/package.t
+t/File/Package.*
 t/File/BadLoad.pm
 t/File/BadVocab.pm
+lib/File/SmartNL.pm => tlib/File/SmartNL.pm
+lib/Text/Scrub.pm => tlib/Text/Scrub.pm
+lib/Test/Tech.pm => tlib/Test/Tech.pm
+lib/Data/Secs2.pm => tlib/Data/Secs2.pm
 ^
 
 PREREQ_PM:  ^
-TESTS: t/File/package.t^
+TESTS: t/File/Package.t^
 EXE_FILES:  ^
 
 CHANGES:
@@ -838,6 +858,12 @@ Added subroutine interfaces.
 
 Added @import input to load_packages method
 
+\=item File-Package-0.06
+
+Upgraded the 'tlib\Test\Tech' and changed the
+name of 'tlib\Data\strify' to 'tlib\Data\Secs2'.
+The new name is more self-explanatory.
+
 \=back
 
 ^
@@ -853,20 +879,17 @@ CAPABILITIES:
 One very useful test of the installation of a package is whether
 or not the package loaded.
 If it did not load, the reason it did not load is helpful
-diagnostics.
-
-This information is readily available when loaded at a local site.
-However, it the load occurs at a remote site and the load crashes
-Perl, the remote tester usually will not have this information
-readily available.
+diagnostics and may be used to programically (automatically) take corrective
+action.
 
 The load_package method attempts to capture any load problems by
 loading the package with a "require " under an eval and capturing
 all the "warn" and $@ messages.
-The error messages are returned so that they may be appropriately
-tested and if not as expected the actual and expected included
-in failure report back to the author of the package.
-
+The error messages are returned with a warn instead of die so
+that the using program may take the appropriate action such
+as reporting the errors back to the author when used in test
+software or perhaps falling back on a system 'gzip' command
+when the 'Compress::Zlib' module fails to load.
 ^
 
 PROBLEMS:

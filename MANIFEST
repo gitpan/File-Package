@@ -3,6 +3,12 @@ MANIFEST
 Makefile.PL
 README
 lib/File/Package.pm
-t/File/package.t
+t/File/Package.d
+t/File/Package.pm
+t/File/Package.t
 t/File/BadLoad.pm
 t/File/BadVocab.pm
+tlib/File/SmartNL.pm
+tlib/Text/Scrub.pm
+tlib/Test/Tech.pm
+tlib/Data/Secs2.pm
