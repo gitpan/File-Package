@@ -7,13 +7,10 @@ use warnings;
 use warnings::register;
 
 use vars qw($VERSION $DATE $FILE);
-$VERSION = '0.1';   # automatically generated file
-$DATE = '2003/09/20';
+$VERSION = '0.11';   # automatically generated file
+$DATE = '2004/04/10';
 $FILE = __FILE__;
 
-use Getopt::Long;
-use Cwd;
-use File::Spec;
 
 ##### Test Script ####
 #
@@ -42,185 +39,176 @@ use File::Spec;
 # use a BEGIN block so we print our plan before Module Under Test is loaded
 #
 BEGIN { 
-   use vars qw( $__restore_dir__ @__restore_inc__);
+
+   use FindBin;
+   use File::Spec;
+   use Cwd;
 
    ########
-   # Working directory is that of the script file
+   # The working directory for this script file is the directory where
+   # the test script resides. Thus, any relative files written or read
+   # by this test script are located relative to this test script.
    #
+   use vars qw( $__restore_dir__ );
    $__restore_dir__ = cwd();
-   my ($vol, $dirs) = File::Spec->splitpath(__FILE__);
+   my ($vol, $dirs) = File::Spec->splitpath($FindBin::Bin,'nofile');
    chdir $vol if $vol;
    chdir $dirs if $dirs;
-   ($vol, $dirs) = File::Spec->splitpath(cwd(), 'nofile'); # absolutify
 
    #######
-   # Add the library of the unit under test (UUT) to @INC
-   # It will be found first because it is first in the include path
+   # Pick up any testing program modules off this test script.
    #
-   use Cwd;
-   @__restore_inc__ = @INC;
-
-   ######
-   # Find root path of the t directory
+   # When testing on a target site before installation, place any test
+   # program modules that should not be installed in the same directory
+   # as this test script. Likewise, when testing on a host with a @INC
+   # restricted to just raw Perl distribution, place any test program
+   # modules in the same directory as this test script.
    #
-   my @updirs = File::Spec->splitdir( $dirs );
-   while(@updirs && $updirs[-1] ne 't' ) { 
-       chdir File::Spec->updir();
-       pop @updirs;
-   };
-   chdir File::Spec->updir();
-   my $lib_dir = cwd();
-
-   #####
-   # Add this to the include path. Thus modules that start with t::
-   # will be found.
-   # 
-   $lib_dir =~ s|/|\\|g if $^O eq 'MSWin32';  # microsoft abberation
-   unshift @INC, $lib_dir;  # include the current test directory
-
-   #####
-   # Add lib to the include path so that modules under lib at the
-   # same level as t, will be found
-   #
-   $lib_dir = File::Spec->catdir( cwd(), 'lib' );
-   $lib_dir =~ s|/|\\|g if $^O eq 'MSWin32';  # microsoft abberation
-   unshift @INC, $lib_dir;
-
-   #####
-   # Add tlib to the include path so that modules under tlib at the
-   # same level as t, will be found
-   #
-   $lib_dir = File::Spec->catdir( cwd(), 'tlib' );
-   $lib_dir =~ s|/|\\|g if $^O eq 'MSWin32';  # microsoft abberation
-   unshift @INC, $lib_dir;
-   chdir $dirs if $dirs;
- 
-   #####
-   # Add lib under the directory where the test script resides.
-   # This may be used to place version sensitive modules.
-   #
-   $lib_dir = File::Spec->catdir( cwd(), 'lib' );
-   $lib_dir =~ s|/|\\|g if $^O eq 'MSWin32';  # microsoft abberation
-   unshift @INC, $lib_dir;
-
-   ##########
-   # Pick up a output redirection file and tests to skip
-   # from the command line.
-   #
-   my $test_log = '';
-   GetOptions('log=s' => \$test_log);
+   use lib $FindBin::Bin;
 
    ########
    # Using Test::Tech, a very light layer over the module "Test" to
    # conduct the tests.  The big feature of the "Test::Tech: module
-   # is that it takes a expected and actual reference and stringify
-   # them by using "Data::Dumper" before passing them to the "ok"
-   # in test.
+   # is that it takes expected and actual references and stringify
+   # them by using "Data::Secs2" before passing them to the "&Test::ok"
+   # Thus, almost any time of Perl data structures may be
+   # compared by passing a reference to them to Test::Tech::ok
    #
    # Create the test plan by supplying the number of tests
    # and the todo tests
    #
    require Test::Tech;
-   Test::Tech->import( qw(plan ok skip skip_tests tech_config) );
-   plan(tests => 11);
+   Test::Tech->import( qw(plan ok skip skip_tests tech_config finish) );
+   plan(tests => 14);
 
 }
 
 
-
 END {
-
+ 
    #########
    # Restore working directory and @INC back to when enter script
    #
-   @INC = @__restore_inc__;
+   @INC = @lib::ORIG_INC;
    chdir $__restore_dir__;
 }
 
    # Perl code from C:
-    use File::Spec;
-
     use File::Package;
     my $uut = 'File::Package';
-    use File::Package;
 
-ok(  my $errors = $uut->load_package( 'File::Basename' ), # actual results
+ok(  my $loaded = $uut->is_package_loaded('File::Package'), # actual results
+      '1', # expected results
+     "",
+     "UUT loaded");
+
+#  ok:  1
+
+ok(  my $error = $uut->load_package( 'File::Basename' ), # actual results
      '', # expected results
      "",
      "Good Load");
 
-#  ok:  1
-
-ok(  '' ne ($errors = $uut->load_package( 't::File::BadLoad' ) ), # actual results
-     1, # expected results
-     "",
-     "Bad Load");
-
 #  ok:  2
 
-ok(  '' ne ($errors = $uut->load_package( 't::File::BadVocab' ) ), # actual results
+   # Perl code from C:
+$error = $uut->load_package( '_File_::BadLoad' );
+
+ok(  $error =~ /^Cannot load _File_::BadLoad/ ? 1 : 0, # actual results
      1, # expected results
-     "",
-     "Bad Vocab");
+     "$error",
+     "Bad Load");
 
 #  ok:  3
+
+   # Perl code from C:
+$error = $uut->load_package( '_File_::BadPackage' );
+
+ok(  $error =~ /_File_::BadPackage absent./ ? 1 : 0, # actual results
+     1, # expected results
+     "$error",
+     "File Loads, Package absent");
+
+#  ok:  4
+
+ok(  $error = $uut->load_package( '_File_::Multi', 
+        [qw(File::Package1  File::Package2 File::Package3)] ), # actual results
+     '', # expected results
+     "",
+     "Multiple Package Load");
+
+#  ok:  5
+
+   # Perl code from C:
+$error = $uut->load_package( '_File_::Hyphen-Test' );
+
+ok(  $error ? 1 : 0, # actual results
+     1, # expected results
+     "$error",
+     "File::Hyphen-Test Load");
+
+#  ok:  6
 
 ok(  !defined($main::{'find'}), # actual results
      1, # expected results
      "",
-     "No &File::Find::find");
+     "No &File::Find::find import baseline");
 
-#  ok:  4
+#  ok:  7
 
-ok(  $errors = $uut->load_package( 'File::Find', 'find' ), # actual results
+ok(  $error = $uut->load_package( 'File::Find', 'find', ['File::Find'] ), # actual results
      '', # expected results
      "",
      "Load File::Find, Import &File::Find::find");
 
-#  ok:  5
-
-ok(  defined($main::{'find'}), # actual results
-     1, # expected results
-     "",
-     "&File::Find::find");
-
-#  ok:  6
-
-ok(  !defined($main::{'finddepth'}), # actual results
-     1, # expected results
-     "",
-     "No &File::Find::finddepth");
-
-#  ok:  7
-
-ok(  $errors = $uut->load_package( 'File::Find', ''), # actual results
-     '', # expected results
-     "",
-     "Import no File::Find functions");
-
 #  ok:  8
 
-ok(  !defined($main::{'finddepth'}), # actual results
-     1, # expected results
+ok(  defined($main::{'find'}), # actual results
+     '1', # expected results
      "",
-     "No &File::Find::finddepth");
+     "&File::Find::find imported");
 
 #  ok:  9
 
-ok(  $errors = $uut->load_package( 'File::Find'), # actual results
-     '', # expected results
+ok(  !defined($main::{'finddepth'}), # actual results
+     1, # expected results
      "",
-     "Import no File::Find functions");
+     "&File::Find::finddepth not imported");
 
 #  ok:  10
 
-ok(  defined($main::{'finddepth'}), # actual results
-     1, # expected results
+ok(  $error = 0 < length($uut->load_package( 'File::Find', 'Jolly_Green_Giant')), # actual results
+     '1', # expected results
      "",
-     "No &File::Find::finddepth");
+     "Import error");
 
 #  ok:  11
 
+ok(  !defined($main::{'finddepth'}), # actual results
+     1, # expected results
+     "",
+     "&File::Find::finddepth still no imported");
+
+#  ok:  12
+
+ok(  $error = $uut->load_package( 'File::Find', ''), # actual results
+     '', # expected results
+     "",
+     "Import all File::Find functions");
+
+#  ok:  13
+
+ok(  defined($main::{'finddepth'}), # actual results
+     '1', # expected results
+     "",
+     "&File::Find::finddepth imported");
+
+#  ok:  14
+
+
+    finish();
+
+__END__
 
 =head1 NAME
 
@@ -253,15 +241,15 @@ and use in source and binary forms, with or
 without modification, provided that the 
 following conditions are met: 
 
-=over 4
+/=over 4
 
-=item 1
+/=item 1
 
 Redistributions of source code, modified or unmodified
 must retain the above copyright notice, this list of
 conditions and the following disclaimer. 
 
-=item 2
+/=item 2
 
 Redistributions in binary form must 
 reproduce the above copyright notice,
@@ -270,7 +258,7 @@ disclaimer in the documentation and/or
 other materials provided with the
 distribution.
 
-=back
+/=back
 
 SOFTWARE DIAMONDS, http://www.SoftwareDiamonds.com,
 PROVIDES THIS SOFTWARE 

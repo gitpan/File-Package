@@ -12,7 +12,7 @@ use attributes;
 
 use vars qw($VERSION $DATE $FILE);
 $VERSION = '1.15';
-$DATE = '2003/09/20';
+$DATE = '2004/04/10';
 $FILE = __FILE__;
 
 use vars qw(@ISA @EXPORT_OK);
@@ -73,6 +73,7 @@ sub list2str
 
          elsif ($format =~ /[AJBT]/) {
              $element = splice(@list,0,1);
+             $element = '' unless $element;
              $length = length($element);
              $string .= ${indent} . $format .'[' . $length . ']';
              $string .= ($element =~ /\n/) ? "\n" : ' ';
@@ -338,7 +339,7 @@ Data::Secs2 - canoncial string for nested data
 The 'Data::SECSII' module provides a canoncial string for data
 no matter how many nests of arrays and hashes it contains.
 
-=head2 arrayify subroutine/method
+=head2 arrayify subroutine
 
 The purpose of the 'arrayify_var' subroutine/method is
 to provide a canoncial representation of hashes with
@@ -375,7 +376,7 @@ Leaves $var as is.
 
 =back
 
-=head2 secsify subroutine/method
+=head2 secsify subroutine
 
 The 'secsify' subroutine/method walks a data structure and
 converts all underlying array and hash references to arrays
@@ -462,7 +463,7 @@ will be listified into SECSII message as follows:
 
  SCALAR = 'A', $scalar  (Perl built-in class)
                 
-=head2 stringify subroutine/method
+=head2 stringify subroutine
 
 The 'stringify' subroutine/method stringifies a data structure
 by applying '&Dump::Dumper' to a data structure arrayified by

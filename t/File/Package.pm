@@ -10,8 +10,8 @@ use warnings;
 use warnings::register;
 
 use vars qw($VERSION $DATE $FILE );
-$VERSION = '0.01';
-$DATE = '2003/09/20';
+$VERSION = '0.02';
+$DATE = '2004/04/10';
 $FILE = __FILE__;
 
 ########
@@ -40,7 +40,7 @@ $FILE = __FILE__;
 
  Version: 
 
- Date: 2003/09/14
+ Date: 2004/04/10
 
  Prepared for: General Public 
 
@@ -80,91 +80,137 @@ L<STD FormDB Test Description Fields|Test::STDmaker/STD FormDB Test Description 
 
 =head2 Test Plan
 
- T: 11^
+ T: 14^
 
 =head2 ok: 1
 
 
   C:
-     use File::Spec;
      use File::Package;
      my $uut = 'File::Package';
-     use File::Package;
  ^
-  N: Good Load^
-  A: my $errors = $uut->load_package( 'File::Basename' )^
-  E: ''^
+ VO: ^
+  N: UUT loaded^
+  A: my $loaded = $uut->is_package_loaded('File::Package')^
+  E:  '1'^
  ok: 1^
 
 =head2 ok: 2
 
-  N: Bad Load^
-  A: '' ne ($errors = $uut->load_package( 't::File::BadLoad' ) )^
-  E: 1^
+  N: Good Load^
+  A: my $error = $uut->load_package( 'File::Basename' )^
+  E: ''^
  ok: 2^
 
 =head2 ok: 3
 
-  N: Bad Vocab^
-  A: '' ne ($errors = $uut->load_package( 't::File::BadVocab' ) )^
+ DO: ^
+  A: $error = $uut->load_package( '_File_::BadLoad' )^
+ VO: ^
+  N: Bad Load^
+  C: $error = $uut->load_package( '_File_::BadLoad' )^
+ DM: $error^
+  A: $error =~ /^^Cannot load _File_::BadLoad/ ? 1 : 0^
   E: 1^
  ok: 3^
 
 =head2 ok: 4
 
-  N: No &File::Find::find^
-  A: !defined($main::{'find'})^
+ DO: ^
+  A: $uut->load_package( '_File_::BadPackage' )^
+ VO: ^
+  N: File Loads, Package absent^
+  C: $error = $uut->load_package( '_File_::BadPackage' )^
+ DM: $error^
+  A: $error =~ /_File_::BadPackage absent./ ? 1 : 0^
   E: 1^
  ok: 4^
 
 =head2 ok: 5
 
-  N: Load File::Find, Import &File::Find::find^
-  A: $errors = $uut->load_package( 'File::Find', 'find' )^
+ DO: ^
+  A: $uut->load_package( '_File_::Multi' )^
+ VO: ^
+  N: Multiple Package Load^
+
+  A:
+ $error = $uut->load_package( '_File_::Multi', 
+         [qw(File::Package1  File::Package2 File::Package3)] )
+ ^
   E: ''^
  ok: 5^
 
 =head2 ok: 6
 
-  N: &File::Find::find^
-  A: defined($main::{'find'})^
+ DO: ^
+  A: $error = $uut->load_package( '_File_::Hyphen-Test' )^
+ VO: ^
+  N: File::Hyphen-Test Load^
+  C: $error = $uut->load_package( '_File_::Hyphen-Test' )^
+ DM: $error^
+  A: $error ? 1 : 0^
   E: 1^
  ok: 6^
 
 =head2 ok: 7
 
-  N: No &File::Find::finddepth^
-  A: !defined($main::{'finddepth'})^
+  N: No &File::Find::find import baseline^
+  A: !defined($main::{'find'})^
   E: 1^
  ok: 7^
 
 =head2 ok: 8
 
-  N: Import no File::Find functions^
-  A: $errors = $uut->load_package( 'File::Find', '')^
+  N: Load File::Find, Import &File::Find::find^
+  A: $error = $uut->load_package( 'File::Find', 'find', ['File::Find'] )^
   E: ''^
  ok: 8^
 
 =head2 ok: 9
 
-  N: No &File::Find::finddepth^
-  A: !defined($main::{'finddepth'})^
-  E: 1^
+  N: &File::Find::find imported^
+  A: defined($main::{'find'})^
+  E: '1'^
  ok: 9^
 
 =head2 ok: 10
 
-  N: Import no File::Find functions^
-  A: $errors = $uut->load_package( 'File::Find')^
-  E: ''^
+  N: &File::Find::finddepth not imported^
+  A: !defined($main::{'finddepth'})^
+  E: 1^
  ok: 10^
 
 =head2 ok: 11
 
-  N: No &File::Find::finddepth^
-  A: defined($main::{'finddepth'})^
-  E: 1^
+ DO: ^
+  N: Import error^
+  A: $uut->load_package( 'File::Find', 'Jolly_Green_Giant')^
+ VO: ^
+  N: Import error^
+  A: $error = 0 < length($uut->load_package( 'File::Find', 'Jolly_Green_Giant'))^
+  E: '1'^
  ok: 11^
+
+=head2 ok: 12
+
+  N: &File::Find::finddepth still no imported^
+  A: !defined($main::{'finddepth'})^
+  E: 1^
+ ok: 12^
+
+=head2 ok: 13
+
+  N: Import all File::Find functions^
+  A: $error = $uut->load_package( 'File::Find', '')^
+  E: ''^
+ ok: 13^
+
+=head2 ok: 14
+
+  N: &File::Find::finddepth imported^
+  A: defined($main::{'finddepth'})^
+  E: '1'^
+ ok: 14^
 
 
 
@@ -201,15 +247,15 @@ and use in source and binary forms, with or
 without modification, provided that the 
 following conditions are met: 
 
-=over 4
+/=over 4
 
-=item 1
+/=item 1
 
 Redistributions of source code, modified or unmodified
 must retain the above copyright notice, this list of
 conditions and the following disclaimer. 
 
-=item 2
+/=item 2
 
 Redistributions in binary form must 
 reproduce the above copyright notice,
@@ -218,7 +264,7 @@ disclaimer in the documentation and/or
 other materials provided with the
 distribution.
 
-=back
+/=back
 
 SOFTWARE DIAMONDS, http://www.SoftwareDiamonds.com,
 PROVIDES THIS SOFTWARE 
@@ -246,7 +292,7 @@ ANY WAY OUT OF THE POSSIBILITY OF SUCH DAMAGE.
 
 =head1 SEE ALSO
 
-L<File::Data>
+L<File::Package>
 
 =back
 
@@ -284,74 +330,114 @@ Demo: Package.d^
 Verify: Package.t^
 
 
- T: 11^
+ T: 14^
 
 
  C:
-    use File::Spec;
-
     use File::Package;
     my $uut = 'File::Package';
-    use File::Package;
 ^
 
- N: Good Load^
- A: my $errors = $uut->load_package( 'File::Basename' )^
- E: ''^
+VO: ^
+ N: UUT loaded^
+ A: my $loaded = $uut->is_package_loaded('File::Package')^
+ E:  '1'^
 ok: 1^
 
- N: Bad Load^
- A: '' ne ($errors = $uut->load_package( 't::File::BadLoad' ) )^
- E: 1^
+ N: Good Load^
+ A: my $error = $uut->load_package( 'File::Basename' )^
+ E: ''^
 ok: 2^
 
- N: Bad Vocab^
- A: '' ne ($errors = $uut->load_package( 't::File::BadVocab' ) )^
+DO: ^
+ A: $error = $uut->load_package( '_File_::BadLoad' )^
+VO: ^
+ N: Bad Load^
+ C: $error = $uut->load_package( '_File_::BadLoad' )^
+DM: $error^
+ A: $error =~ /^^Cannot load _File_::BadLoad/ ? 1 : 0^
  E: 1^
 ok: 3^
 
- N: No &File::Find::find^
- A: !defined($main::{'find'})^
+DO: ^
+ A: $uut->load_package( '_File_::BadPackage' )^
+VO: ^
+ N: File Loads, Package absent^
+ C: $error = $uut->load_package( '_File_::BadPackage' )^
+DM: $error^
+ A: $error =~ /_File_::BadPackage absent./ ? 1 : 0^
  E: 1^
 ok: 4^
 
- N: Load File::Find, Import &File::Find::find^
- A: $errors = $uut->load_package( 'File::Find', 'find' )^
+DO: ^
+ A: $uut->load_package( '_File_::Multi' )^
+VO: ^
+ N: Multiple Package Load^
+
+ A:
+$error = $uut->load_package( '_File_::Multi', 
+        [qw(File::Package1  File::Package2 File::Package3)] )
+^
+
  E: ''^
 ok: 5^
 
- N: &File::Find::find^
- A: defined($main::{'find'})^
+DO: ^
+ A: $error = $uut->load_package( '_File_::Hyphen-Test' )^
+VO: ^
+ N: File::Hyphen-Test Load^
+ C: $error = $uut->load_package( '_File_::Hyphen-Test' )^
+DM: $error^
+ A: $error ? 1 : 0^
  E: 1^
 ok: 6^
 
- N: No &File::Find::finddepth^
- A: !defined($main::{'finddepth'})^
+ N: No &File::Find::find import baseline^
+ A: !defined($main::{'find'})^
  E: 1^
 ok: 7^
 
- N: Import no File::Find functions^
- A: $errors = $uut->load_package( 'File::Find', '')^
+ N: Load File::Find, Import &File::Find::find^
+ A: $error = $uut->load_package( 'File::Find', 'find', ['File::Find'] )^
  E: ''^
 ok: 8^
 
- N: No &File::Find::finddepth^
- A: !defined($main::{'finddepth'})^
- E: 1^
+ N: &File::Find::find imported^
+ A: defined($main::{'find'})^
+ E: '1'^
 ok: 9^
 
- N: Import no File::Find functions^
- A: $errors = $uut->load_package( 'File::Find')^
- E: ''^
+ N: &File::Find::finddepth not imported^
+ A: !defined($main::{'finddepth'})^
+ E: 1^
 ok: 10^
 
- N: No &File::Find::finddepth^
- A: defined($main::{'finddepth'})^
- E: 1^
+DO: ^
+ N: Import error^
+ A: $uut->load_package( 'File::Find', 'Jolly_Green_Giant')^
+VO: ^
+ N: Import error^
+ A: $error = 0 < length($uut->load_package( 'File::Find', 'Jolly_Green_Giant'))^
+ E: '1'^
 ok: 11^
 
+ N: &File::Find::finddepth still no imported^
+ A: !defined($main::{'finddepth'})^
+ E: 1^
+ok: 12^
 
-See_Also: L<File::Data>^
+ N: Import all File::Find functions^
+ A: $error = $uut->load_package( 'File::Find', '')^
+ E: ''^
+ok: 13^
+
+ N: &File::Find::finddepth imported^
+ A: defined($main::{'finddepth'})^
+ E: '1'^
+ok: 14^
+
+
+See_Also: L<File::Package>^
 
 Copyright:
 copyright © 2003 Software Diamonds.
@@ -361,15 +447,15 @@ and use in source and binary forms, with or
 without modification, provided that the 
 following conditions are met: 
 
-=over 4
+/=over 4
 
-=item 1
+/=item 1
 
 Redistributions of source code, modified or unmodified
 must retain the above copyright notice, this list of
 conditions and the following disclaimer. 
 
-=item 2
+/=item 2
 
 Redistributions in binary form must 
 reproduce the above copyright notice,
@@ -378,7 +464,7 @@ disclaimer in the documentation and/or
 other materials provided with the
 distribution.
 
-=back
+/=back
 
 SOFTWARE DIAMONDS, http://www.SoftwareDiamonds.com,
 PROVIDES THIS SOFTWARE 

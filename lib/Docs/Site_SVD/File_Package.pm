@@ -10,26 +10,26 @@ use warnings;
 use warnings::register;
 
 use vars qw($VERSION $DATE $FILE );
-$VERSION = '0.04';
-$DATE = '2003/09/20';
+$VERSION = '0.05';
+$DATE = '2004/04/10';
 $FILE = __FILE__;
 
 use vars qw(%INVENTORY);
 %INVENTORY = (
-    'lib/Docs/Site_SVD/File_Package.pm' => [qw(0.04 2003/09/20), 'revised 0.03'],
-    'MANIFEST' => [qw(0.04 2003/09/20), 'generated, replaces 0.03'],
-    'Makefile.PL' => [qw(0.04 2003/09/20), 'generated, replaces 0.03'],
-    'README' => [qw(0.04 2003/09/20), 'generated, replaces 0.03'],
-    'lib/File/Package.pm' => [qw(1.13 2003/09/20), 'revised 1.12'],
-    't/File/Package.d' => [qw(0.01 2003/09/20), 'new'],
-    't/File/Package.pm' => [qw(0.01 2003/09/20), 'new'],
-    't/File/Package.t' => [qw(0.1 2003/09/20), 'revised 0.09'],
-    't/File/BadLoad.pm' => [qw(0.01 2003/09/13), 'unchanged'],
-    't/File/BadVocab.pm' => [qw(0.01 2003/09/13), 'unchanged'],
-    'tlib/File/SmartNL.pm' => [qw(1.12 2003/09/20), 'new'],
-    'tlib/Text/Scrub.pm' => [qw(1.11 2003/09/20), 'new'],
-    'tlib/Test/Tech.pm' => [qw(1.15 2003/09/20), 'new'],
-    'tlib/Data/Secs2.pm' => [qw(1.15 2003/09/20), 'new'],
+    'lib/Docs/Site_SVD/File_Package.pm' => [qw(0.05 2004/04/10), 'revised 0.04'],
+    'MANIFEST' => [qw(0.05 2004/04/10), 'generated, replaces 0.04'],
+    'Makefile.PL' => [qw(0.05 2004/04/10), 'generated, replaces 0.04'],
+    'README' => [qw(0.05 2004/04/10), 'generated, replaces 0.04'],
+    'lib/File/Package.pm' => [qw(1.15 2004/04/10), 'revised 1.13'],
+    't/File/Package.d' => [qw(0.02 2004/04/10), 'revised 0.01'],
+    't/File/Package.pm' => [qw(0.02 2004/04/10), 'revised 0.01'],
+    't/File/Package.t' => [qw(0.11 2004/04/10), 'revised 0.1'],
+    't/File/_File_/BadLoad.pm' => [qw(0.01 2004/04/10), 'new'],
+    't/File/_File_/BadPackage.pm' => [qw(0.01 2004/04/10), 'new'],
+    't/File/_File_/Hyphen-Test.pm' => [qw(1.15 2004/04/10), 'new'],
+    't/File/_File_/Multi.pm' => [qw(1.15 2004/04/10), 'new'],
+    't/File/Test/Tech.pm' => [qw(1.17 2004/04/10), 'new'],
+    't/File/Data/Secs2.pm' => [qw(1.15 2004/04/10), 'new'],
 
 );
 
@@ -56,11 +56,11 @@ use vars qw(%INVENTORY);
 
   File::Package - Load packages and import symbols gracefully
 
- Revision: C
+ Revision: D
 
- Version: 0.04
+ Version: 0.05
 
- Date: 2003/09/20
+ Date: 2004/04/10
 
  Prepared for: General Public 
 
@@ -101,7 +101,7 @@ when the 'Compress::Zlib' module fails to load.
 
 =head2 1.3 Document overview.
 
-This document releases File::Package version 0.04
+This document releases File::Package version 0.05
 providing a description of the inventory, installation
 instructions and other information necessary to
 utilize and track this release.
@@ -114,12 +114,14 @@ system file specification.
 
 =head2 3.1 Inventory of materials released.
 
-This document releases the file found
-at the following repository(s):
+This document releases the file 
 
-   http://www.softwarediamonds/packages/File-Package-0.04
-   http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/File-Package-0.04
+ File-Package-0.05.tar.gz
 
+found at the following repository(s):
+
+  http://www.softwarediamonds/packages/
+  http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/
 
 Restrictions regarding duplication and license provisions
 are as follows:
@@ -186,25 +188,25 @@ consists of the following files:
 
  file                                                         version date       comment
  ------------------------------------------------------------ ------- ---------- ------------------------
- lib/Docs/Site_SVD/File_Package.pm                            0.04    2003/09/20 revised 0.03
- MANIFEST                                                     0.04    2003/09/20 generated, replaces 0.03
- Makefile.PL                                                  0.04    2003/09/20 generated, replaces 0.03
- README                                                       0.04    2003/09/20 generated, replaces 0.03
- lib/File/Package.pm                                          1.13    2003/09/20 revised 1.12
- t/File/Package.d                                             0.01    2003/09/20 new
- t/File/Package.pm                                            0.01    2003/09/20 new
- t/File/Package.t                                             0.1     2003/09/20 revised 0.09
- t/File/BadLoad.pm                                            0.01    2003/09/13 unchanged
- t/File/BadVocab.pm                                           0.01    2003/09/13 unchanged
- tlib/File/SmartNL.pm                                         1.12    2003/09/20 new
- tlib/Text/Scrub.pm                                           1.11    2003/09/20 new
- tlib/Test/Tech.pm                                            1.15    2003/09/20 new
- tlib/Data/Secs2.pm                                           1.15    2003/09/20 new
+ lib/Docs/Site_SVD/File_Package.pm                            0.05    2004/04/10 revised 0.04
+ MANIFEST                                                     0.05    2004/04/10 generated, replaces 0.04
+ Makefile.PL                                                  0.05    2004/04/10 generated, replaces 0.04
+ README                                                       0.05    2004/04/10 generated, replaces 0.04
+ lib/File/Package.pm                                          1.15    2004/04/10 revised 1.13
+ t/File/Package.d                                             0.02    2004/04/10 revised 0.01
+ t/File/Package.pm                                            0.02    2004/04/10 revised 0.01
+ t/File/Package.t                                             0.11    2004/04/10 revised 0.1
+ t/File/_File_/BadLoad.pm                                     0.01    2004/04/10 new
+ t/File/_File_/BadPackage.pm                                  0.01    2004/04/10 new
+ t/File/_File_/Hyphen-Test.pm                                 1.15    2004/04/10 new
+ t/File/_File_/Multi.pm                                       1.15    2004/04/10 new
+ t/File/Test/Tech.pm                                          1.17    2004/04/10 new
+ t/File/Data/Secs2.pm                                         1.15    2004/04/10 new
 
 
 =head2 3.3 Changes
 
-The file names from 0.03 were changed as follows:
+The file names from 0.04 were changed as follows:
 
  return if $file =~ s=lib/File/FileUtil.pm=lib/File/Package.pm=;
  return if $file =~ s=t/File/FileUtil/FileUtil.t=t/File/package.t=;
@@ -302,7 +304,7 @@ t/Test/TestUtil/TestUtil....NOK 18# Test 18 got: '$VAR1 = '\\=head1 Title Page
   File::Package - Load packages and import symbols gracefully
 
 
- Revision: C
+ Revision: D
 
 [snip]
 
@@ -429,17 +431,25 @@ of the routines in the module.
 Replace the obsolete "File::FileUtil" with File::Packgage
 in the test script "t\File\package.t".
 
-=item File-Package-0.05
+=item File-Package-0.03
 
 Added subroutine interfaces.
 
 Added @import input to load_packages method
 
-=item File-Package-0.06
+=item File-Package-0.04
 
 Upgraded the 'tlib\Test\Tech' and changed the
 name of 'tlib\Data\strify' to 'tlib\Data\Secs2'.
 The new name is more self-explanatory.
+
+=item File-Package-0.05
+
+The lastest build of Test::STDmaker expects the test library in the same
+directory as the test script.
+Coordiated with the lastest Test::STDmaker by moving the
+test library from tlib to t/File, the same directory as the test script
+and deleting the test library File::TestPath program module.
 
 =back
 
@@ -465,18 +475,36 @@ and installation support are as follows:
 
 =item Installation Instructions.
 
-To installed the release file, use the CPAN module in the Perl release
+To installed the release file, use the CPAN module
+pr PPM module in the Perl release
 or the INSTALL.PL script at the following web site:
 
  http://packages.SoftwareDiamonds.com
 
 Follow the instructions for the the chosen installation software.
 
-The distribution file is at the following respositories:
+If all else fails, the file may be manually installed.
+Enter one of the following repositories in a web browser:
 
-   http://www.softwarediamonds/packages/File-Package-0.04
-   http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/File-Package-0.04
+  http://www.softwarediamonds/packages/
+  http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/
 
+Right click on 'File-Package-0.05.tar.gz' and download to a temporary
+installation directory.
+Enter the following where $make is 'nmake' for microsoft
+windows; otherwise 'make'.
+
+ gunzip File-Package-0.05.tar.gz
+ tar -xf File-Package-0.05.tar
+ perl Makefile.PL
+ $make test
+ $make install
+
+On Microsoft operating system, nmake, tar, and gunzip 
+must be in the exeuction path. If tar and gunzip are
+not install, download and install unxutils from
+
+ http://packages.softwarediamonds.com
 
 =item Prerequistes.
 
@@ -585,11 +613,11 @@ Plain Old Documentation
 __DATA__
 
 DISTNAME: File-Package^
-VERSION : 0.04^
+VERSION : 0.05^
 FREEZE: 1^
 PREVIOUS_DISTNAME:  ^
-PREVIOUS_RELEASE: 0.03^
-REVISION: C^
+PREVIOUS_RELEASE: 0.04^
+REVISION: D^
 
 AUTHOR  : SoftwareDiamonds.com E<lt>support@SoftwareDiamonds.comE<gt>^
 ABSTRACT: Load packages and import symbols gracefully^
@@ -618,15 +646,16 @@ return if $file =~ s=t/File/FileUtil/FileUtil.t=t/File/package.t=;
 AUTO_REVISE: 
 lib/File/Package.pm
 t/File/Package.*
-t/File/BadLoad.pm
-t/File/BadVocab.pm
-lib/File/SmartNL.pm => tlib/File/SmartNL.pm
-lib/Text/Scrub.pm => tlib/Text/Scrub.pm
-lib/Test/Tech.pm => tlib/Test/Tech.pm
-lib/Data/Secs2.pm => tlib/Data/Secs2.pm
+t/File/_File_/BadLoad.pm
+t/File/_File_/BadPackage.pm
+t/File/_File_/Hyphen-Test.pm
+t/File/_File_/Multi.pm
+lib/Test/Tech.pm => t/File/Test/Tech.pm
+lib/Data/Secs2.pm => t/File/Data/Secs2.pm
 ^
 
 PREREQ_PM:  ^
+README_PODS: lib/File/Package.pm^
 TESTS: t/File/Package.t^
 EXE_FILES:  ^
 
@@ -852,17 +881,25 @@ of the routines in the module.
 Replace the obsolete "File::FileUtil" with File::Packgage
 in the test script "t\File\package.t".
 
-\=item File-Package-0.05
+\=item File-Package-0.03
 
 Added subroutine interfaces.
 
 Added @import input to load_packages method
 
-\=item File-Package-0.06
+\=item File-Package-0.04
 
 Upgraded the 'tlib\Test\Tech' and changed the
 name of 'tlib\Data\strify' to 'tlib\Data\Secs2'.
 The new name is more self-explanatory.
+
+\=item File-Package-0.05
+
+The lastest build of Test::STDmaker expects the test library in the same
+directory as the test script.
+Coordiated with the lastest Test::STDmaker by moving the
+test library from tlib to t/File, the same directory as the test script
+and deleting the test library File::TestPath program module.
 
 \=back
 
@@ -963,16 +1000,38 @@ ANY WAY OUT OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 INSTALLATION:
-To installed the release file, use the CPAN module in the Perl release
+To installed the release file, use the CPAN module
+pr PPM module in the Perl release
 or the INSTALL.PL script at the following web site:
 
  http://packages.SoftwareDiamonds.com
 
 Follow the instructions for the the chosen installation software.
 
-The distribution file is at the following respositories:
+If all else fails, the file may be manually installed.
+Enter one of the following repositories in a web browser:
 
 ${REPOSITORY}
+
+Right click on '${DIST_FILE}' and download to a temporary
+installation directory.
+Enter the following where $make is 'nmake' for microsoft
+windows; otherwise 'make'.
+
+ gunzip ${BASE_DIST_FILE}.tar.${COMPRESS_SUFFIX}
+ tar -xf ${BASE_DIST_FILE}.tar
+ perl Makefile.PL
+ $make test
+ $make install
+
+On Microsoft operating system, nmake, tar, and gunzip 
+must be in the exeuction path. If tar and gunzip are
+not install, download and install unxutils from
+
+ http://packages.softwarediamonds.com
+^
+
+SUPPORT: 603 882-0846 E<lt>support@SoftwareDiamonds.comE<gt>
 ^
 
 SUPPORT: 603 882-0846 E<lt>support@SoftwareDiamonds.comE<gt>^

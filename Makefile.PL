@@ -23,7 +23,7 @@ my $tests = join ' ',unix2os('t/File/Package.t');
 WriteMakefile(
     NAME => 'File::Package',
     DISTNAME => 'File-Package',
-    VERSION  => '0.04',
+    VERSION  => '0.05',
     dist     => {COMPRESS => 'gzip',
                 'gz' => 'gz'},
     test     => {TESTS => $tests},

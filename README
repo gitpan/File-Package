@@ -1,3 +1,274 @@
+NAME
+    File::Package - test load a program module with a package of the same
+    name
+
+SYNOPSIS
+     ##########
+     # Subroutine interface
+     #
+     use File::Package qw(is_package_loaded load_package);
+
+     $yes = is_package_loaded($package, $program_module);
+
+     $error   = load_package($program_module);
+     $error   = load_package($program_module, @import);
+     $error   = load_package($program_module, [@package_list]);
+     $error   = load_package($program_module, @import, [@package_list]);
+
+     ##########
+     # Class Interface
+     # 
+     use File::Package;
+
+     $yes = is_package_loaded($package, $program_module);
+
+     $error   = File::Package->load_package($program_module);
+     $error   = File::Package->load_package($program_module, @import);
+     $error   = File::Package->load_package($program_module, [@package_list]);
+     $error   = File::Package->load_package($program_module, @import, [@package_list]);
+
+DESCRIPTION
+    Although a program module and package have the same name syntax, they
+    are entirely different. A program module is a file. A package is a hash
+    of symbols, a symbol table. The Perl convention is that the names for
+    each are the same which enhances the appearance that they are the same
+    when in fact they are different.
+
+  is_package_loaded subroutine
+     $package = is_package_loaded($program_module, $package)
+
+    The "is_package_loaded" subroutine determines if the $package is present
+    and the $progarm_module loaded. If $package is absent, 0 or '', $package
+    is set to the "program_module".
+
+  load_package subroutine
+      $error = load_package($program_module, @import, [@package_list]);
+
+    The "load_package" subroutine attempts to capture any load problems by
+    loading the package with a "require " under an eval and capturing all
+    the "warn" and $@ messages.
+
+    If the $program_module load is successful, the checks that the packages
+    in the @package list are present. If @package list is absent, the
+    $program_module uses the "program_module" name as a list of one package.
+
+    Finanly the $program_module subroutine will import the symbols in the
+    @import list. If @import is absent $program_module subroutine does not
+    import any symbols; if @import is '', all symbols are imported. A
+    @import of 0 usually results in an $error.
+
+    The $program_module traps all load errors and all import "Carp::Crock"
+    errors and returns them in the $error string.
+
+    One very useful application of the "load_package" subroutine is in test
+    scripts. If a package does load, it is very helpful that the program
+    does not die and reports the reason the package did not load. This
+    information is readily available when loaded at a local site. However,
+    it the load occurs at a remote site and the load crashes Perl, the
+    remote tester usually will not have this information readily available.
+
+    Other applications include using backup alternative software if a
+    package does not load. For example if the package 'Compress::Zlib' did
+    not load, an attempt may be made to use the gzip system command.
+
+BUGS
+    The "load_package" cannot load program modules whose name contain the
+    '-' characters. The 'eval' function used to trap the die errors believes
+    it means subtraction.
+
+REQUIREMENTS
+    Coming soon.
+
+DEMONSTRATION
+     ~~~~~~ Demonstration overview ~~~~~
+
+    Perl code begins with the prompt
+
+     =>
+
+    The selected results from executing the Perl Code follow on the next
+    lines. For example,
+
+     => 2 + 2
+     4
+
+     ~~~~~~ The demonstration follows ~~~~~
+
+     =>     use File::Package;
+     =>     my $uut = 'File::Package';
+     => my $error = $uut->load_package( 'File::Basename' )
+     ''
+
+     => $error = $uut->load_package( '_File_::BadLoad' )
+     'Cannot load _File_::BadLoad
+            syntax error at E:/User/SoftwareDiamonds/installation/t/File/_File_/BadLoad.pm line 13, near "$FILE "
+            Global symbol "$FILE" requires explicit package name at E:/User/SoftwareDiamonds/installation/t/File/_File_/BadLoad.pm line 13.
+            Compilation failed in require at (eval 4) line 1.
+            Scalar found where operator expected at E:/User/SoftwareDiamonds/installation/t/File/_File_/BadLoad.pm line 13, near "$FILE"
+                    (Missing semicolon on previous line?)
+            '
+
+     => $uut->load_package( '_File_::BadPackage' )
+     '# _File_::BadPackage file but package(s) _File_::BadPackage absent.
+     '
+
+     => $uut->load_package( '_File_::Multi' )
+     '# _File_::Multi file but package(s) _File_::Multi absent.
+     '
+
+     => $error = $uut->load_package( '_File_::Hyphen-Test' )
+     'Cannot load _File_::Hyphen-Test
+            syntax error at (eval 7) line 1, near "require _File_::Hyphen-"
+            Warning: Use of "require" without parens is ambiguous at (eval 7) line 1.
+            '
+
+     => !defined($main::{'find'})
+     '1'
+
+     => $error = $uut->load_package( 'File::Find', 'find', ['File::Find'] )
+     ''
+
+     => defined($main::{'find'})
+     '1'
+
+     => !defined($main::{'finddepth'})
+     '1'
+
+     => $uut->load_package( 'File::Find', 'Jolly_Green_Giant')
+     '"Jolly_Green_Giant" is not exported by the File::Find module
+     Can't continue after import errors'
+
+     => !defined($main::{'finddepth'})
+     '1'
+
+     => $error = $uut->load_package( 'File::Find', '')
+     ''
+
+     => defined($main::{'finddepth'})
+     '1'
+
+QUALITY ASSURANCE
+    Running the test script 'Package.t' found in the
+    "File-Package-$VERSION.tar.gz" distribution file verifies the
+    requirements for this module.
+
+    All testing software and documentation stems from the Software Test
+    Description (STD) program module 't::File::Package', found in the
+    distribution file "File-Package-$VERSION.tar.gz".
+
+    The 't::File::Package' STD POD contains a tracebility matix between the
+    requirements established above for this module, and the test steps
+    identified by a 'ok' number from running the 'Package.t' test script.
+
+    The t::File::Package' STD program module '__DATA__' section contains the
+    data to perform the following:
+
+    *   to generate the test script 'Package.t'
+
+    *   generate the tailored STD POD in the 't::File::Package' module,
+
+    *   generate the 'Package.d' demo script,
+
+    *   replace the POD demonstration section herein with the demo script
+        'Package.d' output, and
+
+    *   run the test script using Test::Harness with or without the verbose
+        option,
+
+    To perform all the above, prepare and run the automation software as
+    follows:
+
+    *   Install "Test_STDmaker-$VERSION.tar.gz" from one of the
+        respositories only if it has not been installed:
+
+        *   http://www.softwarediamonds/packages/
+
+        *   http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/
+
+    *   manually place the script tmake.pl in
+        "Test_STDmaker-$VERSION.tar.gz' in the site operating system
+        executable path only if it is not in the executable path
+
+    *   place the 't::File::Package' at the same level in the directory
+        struture as the directory holding the 'File::Package' module
+
+    *   execute the following in any directory:
+
+         tmake -test_verbose -replace -run -pm=t::File::Package
+
+NOTES
+  FILES
+    The installation of the "File-Package-$VERSION.tar.gz" distribution file
+    installs the 'Docs::Site_SVD::File_Package' SVD program module.
+
+    The __DATA__ data section of the 'Docs::Site_SVD::File_Package' contains
+    all the necessary data to generate the POD section of
+    'Docs::Site_SVD::File_Package' and the "File-Package-$VERSION.tar.gz"
+    distribution file.
+
+    To make use of the 'Docs::Site_SVD::File_Package' SVD program module,
+    perform the following:
+
+    *   install "ExtUtils-SVDmaker-$VERSION.tar.gz" from one of the
+        respositories only if it has not been installed:
+
+        *   http://www.softwarediamonds/packages/
+
+        *   http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/
+
+    *   manually place the script vmake.pl in
+        "ExtUtils-SVDmaker-$VERSION.tar.gz' in the site operating system
+        executable path only if it is not in the executable path
+
+    *   Make any appropriate changes to the __DATA__ section of the
+        'Docs::Site_SVD::File_Package' module. For example, any changes to
+        'File::Package' will impact the at least 'Changes' field.
+
+    *   Execute the following:
+
+         vmake readme_html all -pm=Docs::Site_SVD::File_Package
+
+  AUTHOR
+    The holder of the copyright and maintainer is
+
+    <support@SoftwareDiamonds.com>
+
+  COPYRIGHT NOTICE
+    Copyrighted (c) 2002 Software Diamonds
+
+    All Rights Reserved
+
+  BINDING REQUIREMENTS NOTICE
+    Binding requirements are indexed with the pharse 'shall[dd]' where dd is
+    an unique number for each header section. This conforms to standard
+    federal government practices, 490A ("3.2.3.6" in STD490A). In accordance
+    with the License, Software Diamonds is not liable for any requirement,
+    binding or otherwise.
+
+  LICENSE
+    Software Diamonds permits the redistribution and use in source and
+    binary forms, with or without modification, provided that the following
+    conditions are met:
+
+    1   Redistributions of source code must retain the above copyright
+        notice, this list of conditions and the following disclaimer.
+
+    2   Redistributions in binary form must reproduce the above copyright
+        notice, this list of conditions and the following disclaimer in the
+        documentation and/or other materials provided with the distribution.
+
+    SOFTWARE DIAMONDS, http::www.softwarediamonds.com, PROVIDES THIS
+    SOFTWARE 'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+    NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL SOFTWARE
+    DIAMONDS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+    SPECIAL,EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+    TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,DATA, OR
+    PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+    LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING USE
+    OF THIS SOFTWARE, EVEN IF ADVISED OF NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE POSSIBILITY OF SUCH DAMAGE.
+
 Title Page
      Software Version Description
 
@@ -5,11 +276,11 @@ Title Page
 
       File::Package - Load packages and import symbols gracefully
 
-     Revision: C
+     Revision: D
 
-     Version: 0.04
+     Version: 0.05
 
-     Date: 2003/09/20
+     Date: 2004/04/10
 
      Prepared for: General Public 
 
@@ -42,7 +313,7 @@ Title Page
     'Compress::Zlib' module fails to load.
 
   1.3 Document overview.
-    This document releases File::Package version 0.04 providing a
+    This document releases File::Package version 0.05 providing a
     description of the inventory, installation instructions and other
     information necessary to utilize and track this release.
 
@@ -51,10 +322,14 @@ Title Page
     specification.
 
   3.1 Inventory of materials released.
-    This document releases the file found at the following repository(s):
+    This document releases the file
 
-       http://www.softwarediamonds/packages/File-Package-0.04
-       http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/File-Package-0.04
+     File-Package-0.05.tar.gz
+
+    found at the following repository(s):
+
+      http://www.softwarediamonds/packages/
+      http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/
 
     Restrictions regarding duplication and license provisions are as
     follows:
@@ -98,23 +373,23 @@ Title Page
 
      file                                                         version date       comment
      ------------------------------------------------------------ ------- ---------- ------------------------
-     lib/Docs/Site_SVD/File_Package.pm                            0.04    2003/09/20 revised 0.03
-     MANIFEST                                                     0.04    2003/09/20 generated, replaces 0.03
-     Makefile.PL                                                  0.04    2003/09/20 generated, replaces 0.03
-     README                                                       0.04    2003/09/20 generated, replaces 0.03
-     lib/File/Package.pm                                          1.13    2003/09/20 revised 1.12
-     t/File/Package.d                                             0.01    2003/09/20 new
-     t/File/Package.pm                                            0.01    2003/09/20 new
-     t/File/Package.t                                             0.1     2003/09/20 revised 0.09
-     t/File/BadLoad.pm                                            0.01    2003/09/13 unchanged
-     t/File/BadVocab.pm                                           0.01    2003/09/13 unchanged
-     tlib/File/SmartNL.pm                                         1.12    2003/09/20 new
-     tlib/Text/Scrub.pm                                           1.11    2003/09/20 new
-     tlib/Test/Tech.pm                                            1.15    2003/09/20 new
-     tlib/Data/Secs2.pm                                           1.15    2003/09/20 new
+     lib/Docs/Site_SVD/File_Package.pm                            0.05    2004/04/10 revised 0.04
+     MANIFEST                                                     0.05    2004/04/10 generated, replaces 0.04
+     Makefile.PL                                                  0.05    2004/04/10 generated, replaces 0.04
+     README                                                       0.05    2004/04/10 generated, replaces 0.04
+     lib/File/Package.pm                                          1.15    2004/04/10 revised 1.13
+     t/File/Package.d                                             0.02    2004/04/10 revised 0.01
+     t/File/Package.pm                                            0.02    2004/04/10 revised 0.01
+     t/File/Package.t                                             0.11    2004/04/10 revised 0.1
+     t/File/_File_/BadLoad.pm                                     0.01    2004/04/10 new
+     t/File/_File_/BadPackage.pm                                  0.01    2004/04/10 new
+     t/File/_File_/Hyphen-Test.pm                                 1.15    2004/04/10 new
+     t/File/_File_/Multi.pm                                       1.15    2004/04/10 new
+     t/File/Test/Tech.pm                                          1.17    2004/04/10 new
+     t/File/Data/Secs2.pm                                         1.15    2004/04/10 new
 
   3.3 Changes
-    The file names from 0.03 were changed as follows:
+    The file names from 0.04 were changed as follows:
 
      return if $file =~ s=lib/File/FileUtil.pm=lib/File/Package.pm=;
      return if $file =~ s=t/File/FileUtil/FileUtil.t=t/File/package.t=;
@@ -205,7 +480,7 @@ Title Page
 
           File::Package - Load packages and import symbols gracefully
 
-         Revision: C
+         Revision: D
 
         [snip]
 
@@ -306,15 +581,22 @@ Title Page
         Replace the obsolete "File::FileUtil" with File::Packgage in the
         test script "t\File\package.t".
 
-    File-Package-0.05
+    File-Package-0.03
         Added subroutine interfaces.
 
         Added @import input to load_packages method
 
-    File-Package-0.06
+    File-Package-0.04
         Upgraded the 'tlib\Test\Tech' and changed the name of
         'tlib\Data\strify' to 'tlib\Data\Secs2'. The new name is more
         self-explanatory.
+
+    File-Package-0.05
+        The lastest build of Test::STDmaker expects the test library in the
+        same directory as the test script. Coordiated with the lastest
+        Test::STDmaker by moving the test library from tlib to t/File, the
+        same directory as the test script and deleting the test library
+        File::TestPath program module.
 
   3.4 Adaptation data.
     This installation requires that the installation site has the Perl
@@ -332,17 +614,34 @@ Title Page
     support are as follows:
 
     Installation Instructions.
-        To installed the release file, use the CPAN module in the Perl
-        release or the INSTALL.PL script at the following web site:
+        To installed the release file, use the CPAN module pr PPM module in
+        the Perl release or the INSTALL.PL script at the following web site:
 
          http://packages.SoftwareDiamonds.com
 
         Follow the instructions for the the chosen installation software.
 
-        The distribution file is at the following respositories:
+        If all else fails, the file may be manually installed. Enter one of
+        the following repositories in a web browser:
 
-           http://www.softwarediamonds/packages/File-Package-0.04
-           http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/File-Package-0.04
+          http://www.softwarediamonds/packages/
+          http://www.perl.com/CPAN-local/authors/id/S/SO/SOFTDIA/
+
+        Right click on 'File-Package-0.05.tar.gz' and download to a
+        temporary installation directory. Enter the following where $make is
+        'nmake' for microsoft windows; otherwise 'make'.
+
+         gunzip File-Package-0.05.tar.gz
+         tar -xf File-Package-0.05.tar
+         perl Makefile.PL
+         $make test
+         $make install
+
+        On Microsoft operating system, nmake, tar, and gunzip must be in the
+        exeuction path. If tar and gunzip are not install, download and
+        install unxutils from
+
+         http://packages.softwarediamonds.com
 
     Prerequistes.
          None.
