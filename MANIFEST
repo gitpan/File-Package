@@ -1,0 +1,6 @@
+lib/Docs/Site_SVD/File_Package.pm
+MANIFEST
+Makefile.PL
+README
+lib/File/Package.pm
+t/File/package.t
